@@ -50,12 +50,7 @@ const Navbar = () => {
                 </Link>
               </li>
               <li className="hover:text-blue-700">
-                <Link href="/about">
-                  Level 1
-                </Link>
-              </li>
-              <li className="hover:text-blue-700">
-                <Link href="/apply">
+                <Link href="/level2page">
                  Level 2
                 </Link>
               </li>
