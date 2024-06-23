@@ -3,59 +3,52 @@ import React, { useState, useEffect } from "react";
 type FormData = {
   name: string;
   email: string;
-  phone: number;
+  topic: string;
+  language: string;
   relexp: number;
-  portfolio: string;
-  mngexp: string;
-  date: string;
-  time: string;
+  ex_freq: string;
+  dietpref: string;
+  qualification: string;
 };
 type Errors = {
   name?: string;
   email?: string;
-  phone?: string;
+  topic?: string;
+  language?: string;
   relexp?: string;
-  portfolio?: string;
-  mngexp?: string;
-  date?: string;
-  time?: string;
+  ex_freq?: string;
+  dietpref?: string;
+  qualification?: string;
 };
 const Level3form = () => {
-  const [selectedPosition, setSelectedPosition] = useState("");
-  const showRelevantExperience =
-    selectedPosition === "option1" || selectedPosition === "option2";
-  // this is used in the typescript for defining the data types of the parameters , it is not required in javascript
+const [questions, setQuestions] = useState([]);
   const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
   const [formData, setFormData] = useState<FormData>({
     name: "",
     email: "",
-    phone: 0,
+    topic: "",
+    language: "",
     relexp: 0,
-    portfolio: "",
-    mngexp: "",
-    date: "",
-    time: "",
+    ex_freq: "",
+    dietpref: "",
+    qualification: "",
   } as FormData);
   const [errors, setErrors] = useState<Errors>({
     name: "",
     email: "",
-    phone: "",
+    topic: "",
+    language: "",
     relexp: "",
-    portfolio: "",
-    mngexp: "",
-    date: "",
-    time: "",
+    ex_freq: "",
+    dietpref: "",
+    qualification: "",
   });
+
   useEffect(() => {
     let newErrors: Errors = {};
 
     // Name validation
     if (!formData.name.trim()) newErrors.name = "Name is required";
-    if (!formData.portfolio.trim()) newErrors.portfolio = "URL is required";
-    if (!formData.mngexp && !formData.relexp)
-      newErrors.mngexp = " Management Experience is required";
-    if (!formData.date.trim()) newErrors.date = "Date is required";
-    if (!formData.time.trim()) newErrors.time = "Time is required";
 
     // Email validation
     if (!formData.email.trim()) {
@@ -64,39 +57,57 @@ const Level3form = () => {
       newErrors.email = "Email must be a valid email format";
     }
 
-    // Age validation
-    if (!formData.phone) {
-      newErrors.phone = "phone number is required";
-    } else if (
-      isNaN(Number(formData.phone)) ||
-      formData.phone.toString().length !== 10
-    ) {
-      newErrors.phone = "Phone number must be of 10 digits";
+    //topic validation
+    if (!formData.topic.trim()) {
+      newErrors.topic = "Topic is required";
     }
 
-    //relevant exp validation
+    //language validation
+    if (!formData.language.trim()) {
+      newErrors.language = "Language is required";
+    }
 
-    if (!formData.relexp || formData.relexp <= 0)
-      newErrors.relexp = "Experience is required";
+    //relexp validation
+    if (!formData.relexp) {
+      newErrors.relexp = "Relevant Experience is required";
+    } else if (isNaN(Number(formData.relexp)) || Number(formData.relexp) <= 0) {
+      newErrors.relexp = "Relevant Experience must be a number greater than 0";
+    }
+
+    //ex_freq validation
+    if (!formData.ex_freq.trim()) {
+      newErrors.ex_freq = "Exercise Frequency is required";
+    }
+
+    //diet_preference validation
+    if (!formData.dietpref.trim()) {
+      newErrors.dietpref = "Diet Preference is required";
+    }
+
+    //qualification validation
+    if (!formData.qualification.trim()) {
+      newErrors.qualification = "Qualification is required";
+    }
 
     setErrors({
       name: newErrors.name || "",
       email: newErrors.email || "",
-      phone: newErrors.phone || "",
+      topic: newErrors.topic || "",
+      language: newErrors.language || "",
       relexp: newErrors.relexp || "",
-      portfolio: newErrors.portfolio || "",
-      mngexp: newErrors.mngexp || "",
-      date: newErrors.date || "",
-      time: newErrors.time || "",
+      ex_freq: newErrors.ex_freq || "",
+      dietpref: newErrors.dietpref || "",
+      qualification: newErrors.qualification || "",
     });
+   
+
   }, [formData]);
 
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
     setIsSubmitted(true);
-    // Rest of your form submission logic
-    console.log(isSubmitted);
   };
+
   return (
     <>
       <div className=" lg:w-2/3  mt-5 mx-auto bg-white shadow-md p-8 rounded-md font-sans">
@@ -153,22 +164,22 @@ const Level3form = () => {
                   />
                 </div>
                 <div className=" sm:col-span-3 mt-4">
-                <label
-                  htmlFor="feedback"
-                  className="block text-sm font-medium text-gray-700"
-                >
-                  Feedback
-                </label>
-                <textarea
-                  id="feedback"
-                  name="feedback"
-                  rows={4}
-                  className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
-                  placeholder="Enter your feedback here..."
-                ></textarea>
+                  <label
+                    htmlFor="feedback"
+                    className="block text-sm font-medium text-gray-700"
+                  >
+                    Feedback
+                  </label>
+                  <textarea
+                    id="feedback"
+                    name="feedback"
+                    rows={4}
+                    className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
+                    placeholder="Enter your feedback here..."
+                  ></textarea>
+                </div>
               </div>
-              </div>
-             
+
               <div className="sm:col-span-3">
                 <div className="mt-2">
                   <label
@@ -180,8 +191,10 @@ const Level3form = () => {
                   <select
                     id="dropdown"
                     name="dropdown"
-                    value={selectedPosition}
-                    onChange={(e) => setSelectedPosition(e.target.value)}
+                    value={formData.topic}
+                    onChange={(e) =>
+                      setFormData({ ...formData, topic: e.target.value })
+                    }
                     className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
                   >
                     <option value="option1">Technology</option>
@@ -189,20 +202,22 @@ const Level3form = () => {
                     <option value="option3">Education</option>
                   </select>
                 </div>
-                {selectedPosition === "option1" && (
+                {formData.topic === "option1" && (
                   <>
                     <div className="mt-2">
                       <label
                         htmlFor="dropdown"
                         className="block text-sm font-medium text-gray-700"
                       >
-                        Survey Topic
+                        Favorite Programming Language
                       </label>
                       <select
                         id="dropdown"
                         name="dropdown"
-                        //  value={selectedPosition}
-                        //  onChange={(e) => setSelectedPosition(e.target.value)}
+                        value={formData.language}
+                        onChange={(e) =>
+                          setFormData({ ...formData, language: e.target.value })
+                        }
                         className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
                       >
                         <option value="option1">Javascript</option>
@@ -235,7 +250,7 @@ const Level3form = () => {
                     </div>
                   </>
                 )}
-                {selectedPosition === "option2" && (
+                {formData.topic === "option2" && (
                   <>
                     <div className="mt-2">
                       <label
@@ -247,8 +262,10 @@ const Level3form = () => {
                       <select
                         id="dropdown"
                         name="dropdown"
-                        // value={selectedPosition}
-                        // onChange={(e) => setSelectedPosition(e.target.value)}
+                        value={formData.ex_freq}
+                        onChange={(e) =>
+                          setFormData({ ...formData, ex_freq: e.target.value })
+                        }
                         className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
                       >
                         <option value="option1">Daily</option>
@@ -262,13 +279,15 @@ const Level3form = () => {
                         htmlFor="dropdown"
                         className="block text-sm font-medium text-gray-700"
                       >
-                        Diet Prefernece
+                        Diet Preference
                       </label>
                       <select
                         id="dropdown"
                         name="dropdown"
-                        // value={selectedPosition}
-                        // onChange={(e) => setSelectedPosition(e.target.value)}
+                        value={formData.dietpref}
+                        onChange={(e) =>
+                          setFormData({ ...formData, dietpref: e.target.value })
+                        }
                         className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
                       >
                         <option value="option1">Vegetarian</option>
@@ -278,20 +297,25 @@ const Level3form = () => {
                     </div>
                   </>
                 )}
-                {selectedPosition === "option3" && (
+                {formData.topic === "option3" && (
                   <>
                     <div className="mt-2">
                       <label
                         htmlFor="dropdown"
                         className="block text-sm font-medium text-gray-700"
                       >
-                       Highest Qualification
+                        Highest Qualification
                       </label>
                       <select
                         id="dropdown"
                         name="dropdown"
-                        // value={selectedPosition}
-                        // onChange={(e) => setSelectedPosition(e.target.value)}
+                        value={formData.qualification}
+                        onChange={(e) =>
+                          setFormData({
+                            ...formData,
+                            qualification: e.target.value,
+                          })
+                        }
                         className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
                       >
                         <option value="option1">High School</option>
@@ -300,31 +324,25 @@ const Level3form = () => {
                       </select>
                     </div>
                     <div className="mt-2">
-                    <label
-                  htmlFor="Field"
-                  className="block text-sm font-medium leading-6 text-gray-900"
-                >
-                  Field of Study
-                </label>
-                <div className="mt-2">
-                  <input
-                    type="text"
-                    name="study"
-                    id="study"
-                    // value={formData.name || " "}
-                    // onChange={(e) => {
-                    //   setFormData({ ...formData, name: e.target.value });
-                    // }}
-                    autoComplete="given-name"
-                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 required"
-                  />
-                </div>
+                      <label
+                        htmlFor="Field"
+                        className="block text-sm font-medium leading-6 text-gray-900"
+                      >
+                        Field of Study
+                      </label>
+                      <div className="mt-2">
+                        <input
+                          type="text"
+                          name="study"
+                          id="study"
+                          autoComplete="given-name"
+                          className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 required"
+                        />
+                      </div>
                     </div>
                   </>
                 )}
-                
               </div>
-              
             </div>
           </div>
           {isSubmitted && errors.name && (
@@ -337,6 +355,40 @@ const Level3form = () => {
               {errors.email}
             </p>
           )}
+          {isSubmitted && errors.topic && (
+            <p className="text-xl font-bold m-5 text-center text-red-500 animate-bounce">
+              {errors.topic}
+            </p>
+          )}
+          {isSubmitted &&
+            errors.language &&
+            formData.topic === "option1" && (
+              <p className="text-xl font-bold m-5 text-center text-red-500 animate-bounce">
+                {errors.language}
+              </p>
+            )}
+          {isSubmitted && errors.relexp && formData.topic === "option1" && (
+            <p className="text-xl font-bold m-5 text-center text-red-500 animate-bounce">
+              {errors.relexp}
+            </p>
+          )}
+          {isSubmitted && errors.ex_freq && formData.topic === "option2" && (
+            <p className="text-xl font-bold m-5 text-center text-red-500 animate-bounce">
+              {errors.ex_freq}
+            </p>
+          )}
+          {isSubmitted && errors.dietpref && formData.topic === "option2" && (
+            <p className="text-xl font-bold m-5 text-center text-red-500 animate-bounce">
+              {errors.dietpref}
+            </p>
+          )}
+          {isSubmitted &&
+            errors.qualification &&
+            formData.topic === "option3" && (
+              <p className="text-xl font-bold m-5 text-center text-red-500 animate-bounce">
+                {errors.qualification}
+              </p>
+            )}
 
           <h2 className="text-xl font-bold mb-4 text-center">
             Form Submission Data:
@@ -351,6 +403,79 @@ const Level3form = () => {
               Email : {formData.email}
             </p>
           )}
+          {isSubmitted && errors.topic === "" && (
+            <p className="text-xl font-bold m-5 uppercase text-center text-yellow-500 animate-bounce">
+              Topic :{" "}
+              {formData.topic === "option1"
+                ? "Technology"
+                : formData.topic === "option2"
+                ? "Health"
+                : formData.topic === "option3"
+                ? "Environment"
+                : "Unknown"}
+            </p>
+          )}
+          {isSubmitted &&
+            errors.language === "" &&
+            formData.topic === "option1" && (
+                <p className="text-xl font-bold m-5 uppercase text-center text-yellow-500 animate-bounce">
+                Favorite language :{" "}
+                {formData.language === "option1"
+                  ? "Javascript"
+                  : formData.language === "option2"
+                  ? "Python"
+                  : formData.language === "option3"
+                  ? "Java"
+                  : "C#"}
+              </p>
+            )}
+          {isSubmitted &&
+            errors.relexp === "" &&
+            formData.topic === "option1" && (
+              <p className="text-xl font-bold m-5 uppercase text-center text-yellow-500 animate-bounce">
+                Relevant Experience : {formData.relexp}
+              </p>
+            )}
+          {isSubmitted &&
+            errors.ex_freq === "" &&
+            formData.topic === "option2" && (
+                <p className="text-xl font-bold m-5 uppercase text-center text-yellow-500 animate-bounce">
+                Excersice Frequency :{" "}
+                {formData.ex_freq === "option1"
+                  ? "Daily"
+                  : formData.ex_freq === "option2"
+                  ? "Weekly"
+                  : formData.ex_freq === "option3"
+                  ? "Monthly"
+                  : "Rarely"}
+              </p>
+              
+            )}
+          {isSubmitted &&
+            errors.dietpref === "" &&
+            formData.topic === "option2" && (
+                <p className="text-xl font-bold m-5 uppercase text-center text-yellow-500 animate-bounce">
+                Diet Preference :{" "}
+                {formData.dietpref === "option1"
+                  ? "Vegetarian"
+                  : formData.dietpref === "option2"
+                  ? "Vegan"
+                  : "Non Vegetarian"}
+              </p>
+            )}
+          {isSubmitted &&
+            errors.qualification === "" &&
+            formData.topic === "option3" && (
+                <p className="text-xl font-bold m-5 uppercase text-center text-yellow-500 animate-bounce">
+                Highest Qualifications :{" "}
+                {formData.qualification === "option1"
+                  ? "High School"
+                  : formData.qualification === "option2"
+                  ? "Bachelors"
+                  : "Masters"
+                  }
+              </p>
+            )}
 
           <div className="flex justify-center">
             <button
